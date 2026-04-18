@@ -309,7 +309,7 @@ Approximately 800–1000 words of prose plus code.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `showcase` |
 | **Title** | *Zero-Lock Price Distribution: Building a High-Throughput Ticker with the LMAX Disruptor* |
 | **Target read time** | 15 minutes |
