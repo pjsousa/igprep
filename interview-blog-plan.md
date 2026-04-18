@@ -48,7 +48,7 @@
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *CAS Explained: The Atomic Primitive That Replaced the Lock* |
 | **Target read time** | 5 minutes |
