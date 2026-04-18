@@ -59,7 +59,7 @@
 | 5 | 5.1 | keyword | JPA Persistence Context: The Hidden State Manager in Every Spring App | 5 min | `written` |
 | 5 | 5.2 | keyword | Entity Lifecycle: The Four States Every JPA Object Passes Through | 5 min | `written` |
 | 5 | 5.3 | keyword | Dirty Checking: How Hibernate Knows What Changed (Without You Telling It) | 5 min | `written` |
-| 5 | 5.4 | keyword | Flush vs Commit: When Hibernate Writes to the Database (and When It Doesn't) | 5 min | `planned` |
+| 5 | 5.4 | keyword | Flush vs Commit: When Hibernate Writes to the Database (and When It Doesn't) | 5 min | `written` |
 | 5 | 5.5 | keyword | The N+1 Problem: The ORM Trap That Kills Production Performance | 5 min | `written` |
 | 5 | 5.6 | keyword | Fetch Join: Solving N+1 Without Switching to Native SQL | 5 min | `planned` |
 | 5 | 5.7 | keyword | Lazy vs Eager Loading: Choosing the Right Fetch Strategy for Every Association | 5 min | `planned` |
