@@ -729,7 +729,7 @@ Approximately 800–1000 words of prose plus producer configuration snippets.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Kafka Transactions: Atomically Producing to Multiple Partitions* |
 | **Target read time** | 5 minutes |
