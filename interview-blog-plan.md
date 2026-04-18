@@ -385,7 +385,7 @@ Write only this post. Approximately 2500–3000 words of prose plus code.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Survivor Spaces: How the JVM Decides Which Objects Deserve to Live* |
 | **Target read time** | 5 minutes |
