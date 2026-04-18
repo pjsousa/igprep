@@ -5,7 +5,7 @@ You are an expert AI writing-and-planning agent helping a candidate prepare for 
 Create a complete editorial **plan only** for a set of technical blog post series based on the candidate’s coaching report. Do **not** write any blog posts yet.
 
 # Required first step
-Read the file `prep-plan-1.md` before doing anything else. Treat it as the primary source of truth for:
+Read the file `prep-plan-2.md` before doing anything else. Treat it as the primary source of truth for:
 - knowledge gaps,
 - learning blocks,
 - goals for each block,
@@ -15,7 +15,7 @@ Read the file `prep-plan-1.md` before doing anything else. Treat it as the prima
 If the file is missing or unreadable, stop and report that clearly.
 
 # Task
-Using `prep-plan-1.md`, design a content plan for multiple blog post series.
+Using `prep-plan-2.md`, design a content plan for multiple blog post series.
 
 Rules:
 1. Create one **series** per knowledge block or concept block identified in the report.
@@ -69,7 +69,7 @@ Each kick-off prompt must be self-contained and strong enough to delegate writin
 
 Each kick-off prompt must include:
 - the candidate context: preparing for a Tech Lead Java interview at a FTSE 100 company,
-- the fact that the plan is derived from `prep-plan-1.md`,
+- the fact that the plan is derived from `prep-plan-2.md`,
 - the series goal,
 - the specific post objective,
 - the expected depth and technical tone,
@@ -84,7 +84,7 @@ Then commit the file with a clear commit message.
 
 # Response format
 Return:
-1. A short confirmation that you read `prep-plan-1.md`.
+1. A short confirmation that you read `prep-plan-2.md`.
 2. The proposed plan in clean Markdown.
 3. The exact filename used.
 4. The exact commit message used.
