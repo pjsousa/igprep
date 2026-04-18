@@ -563,7 +563,7 @@ Approximately 800–1000 words of prose.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *ZGC: Sub-Millisecond Pauses at Any Heap Size* |
 | **Target read time** | 5 minutes |
