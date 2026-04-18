@@ -264,7 +264,7 @@ Approximately 800–1000 words of prose plus code.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *The LMAX Disruptor: How a Ring Buffer Replaced Every Queue You Know* |
 | **Target read time** | 5 minutes |
