@@ -90,7 +90,7 @@ run_step() {
 run_block() {
 
   run_step "🟢 written" \
-    opencode run --model opencode-go/glm-5.1 "@prompts/loop.prompt.md" || return $?
+    opencode run --model opencode-go/minimax-m2.7 "@prompts/loop.prompt.md" || return $?
 
   run_step "🚀 pushing to remote" \
     git push origin || return $?
