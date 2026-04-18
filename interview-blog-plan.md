@@ -23,6 +23,43 @@
 
 ---
 
+
+---
+
+## Summary Table
+
+| Series | Post # | Type | Title | Read Time | Status |
+|---|---|---|---|---|---|
+| 1 | 1.1 | keyword | CAS Explained: The Atomic Primitive That Replaced the Lock | 5 min | `written` |
+| 1 | 1.2 | keyword | AtomicReference: CAS Applied to Object State in Java | 5 min | `written` |
+| 1 | 1.3 | keyword | False Sharing: The Silent Cache-Line Killer in Multithreaded Java | 5 min | `written` |
+| 1 | 1.4 | keyword | Memory Barriers: What the JVM Guarantees (and What It Doesn't) | 5 min | `written` |
+| 1 | 1.5 | keyword | Thread Affinity: Pinning Java Threads to CPU Cores for Predictable Latency | 5 min | `written` |
+| 1 | 1.6 | keyword | The LMAX Disruptor: How a Ring Buffer Replaced Every Queue You Know | 5 min | `written` |
+| 1 | 1.7 | showcase | Zero-Lock Price Distribution: Building a High-Throughput Ticker with the LMAX Disruptor | 15 min | `written` |
+| 2 | 2.1 | keyword | Survivor Spaces: How the JVM Decides Which Objects Deserve to Live | 5 min | `written` |
+| 2 | 2.2 | keyword | TLABs: How the JVM Makes Object Allocation Fast (and When It Doesn't) | 5 min | `written` |
+| 2 | 2.3 | keyword | JIT Compilation: How the JVM Gets Faster Over Time — and When It Slows Down | 5 min | `written` |
+| 2 | 2.4 | keyword | Shenandoah GC: Concurrent Compaction Without Stopping the World | 5 min | `written` |
+| 2 | 2.5 | keyword | ZGC: Sub-Millisecond Pauses at Any Heap Size | 5 min | `written` |
+| 2 | 2.6 | showcase | Diagnosing the Jitter: A JVM Latency Investigation in a Live Price Stream | 15 min | `written` |
+| 3 | 3.1 | keyword | Idempotency: Why Sending a Message Twice Should Be the Same as Sending It Once | 5 min | `written` |
+| 3 | 3.2 | keyword | Kafka Transactions: Atomically Producing to Multiple Partitions | 5 min | `written` |
+| 3 | 3.3 | keyword | Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee | 5 min | `planned` |
+| 3 | 3.4 | keyword | Compacted Topics: Kafka as a Latest-State Key-Value Store | 5 min | `written` |
+| 3 | 3.5 | keyword | Consumer Group Rebalancing: Why Your Kafka Consumer Stops and How to Minimise It | 5 min | `planned` |
+| 3 | 3.6 | showcase | Zero Data Loss, Zero Duplication: Designing a Fault-Tolerant Kafka Price Pipeline | 15 min | `planned` |
+| 4 | 4.1 | keyword | The S.T.A.R. Method: Structuring Technical Leadership Stories That Land | 5 min | `planned` |
+| 4 | 4.2 | keyword | Technical Debt Management: Making the Case for Quality Without Slowing the Team | 5 min | `planned` |
+| 4 | 4.3 | keyword | Post-mortems: Turning Production Incidents Into Engineering Assets | 5 min | `planned` |
+| 4 | 4.4 | keyword | Mentoring Junior Devs: Growing Engineers Without Becoming a Bottleneck | 5 min | `planned` |
+| 4 | 4.5 | keyword | Stakeholder Management: How a Tech Lead Sells Technical Decisions Upward | 5 min | `planned` |
+| 4 | 4.6 | showcase | Raising the Bar Without Breaking the Team: A Tech Lead's Year of Change | 15 min | `planned` |
+
+**Total: 24 posts — 21 keyword posts (5 min each) + 3 showcase articles (15 min each) + 1 leadership showcase (15 min)**
+
+
+
 ---
 
 # Series 1: Lock-Free Java — Mechanical Sympathy for the Trading Floor
@@ -1224,36 +1261,3 @@ Write only this post. Approximately 2500–3000 words.
 ```
 
 ---
----
-
-## Summary Table
-
-| Series | Post # | Type | Title | Read Time | Status |
-|---|---|---|---|---|---|
-| 1 | 1.1 | keyword | CAS Explained: The Atomic Primitive That Replaced the Lock | 5 min | `planned` |
-| 1 | 1.2 | keyword | AtomicReference: CAS Applied to Object State in Java | 5 min | `planned` |
-| 1 | 1.3 | keyword | False Sharing: The Silent Cache-Line Killer in Multithreaded Java | 5 min | `planned` |
-| 1 | 1.4 | keyword | Memory Barriers: What the JVM Guarantees (and What It Doesn't) | 5 min | `planned` |
-| 1 | 1.5 | keyword | Thread Affinity: Pinning Java Threads to CPU Cores for Predictable Latency | 5 min | `planned` |
-| 1 | 1.6 | keyword | The LMAX Disruptor: How a Ring Buffer Replaced Every Queue You Know | 5 min | `planned` |
-| 1 | 1.7 | showcase | Zero-Lock Price Distribution: Building a High-Throughput Ticker with the LMAX Disruptor | 15 min | `planned` |
-| 2 | 2.1 | keyword | Survivor Spaces: How the JVM Decides Which Objects Deserve to Live | 5 min | `planned` |
-| 2 | 2.2 | keyword | TLABs: How the JVM Makes Object Allocation Fast (and When It Doesn't) | 5 min | `planned` |
-| 2 | 2.3 | keyword | JIT Compilation: How the JVM Gets Faster Over Time — and When It Slows Down | 5 min | `planned` |
-| 2 | 2.4 | keyword | Shenandoah GC: Concurrent Compaction Without Stopping the World | 5 min | `planned` |
-| 2 | 2.5 | keyword | ZGC: Sub-Millisecond Pauses at Any Heap Size | 5 min | `planned` |
-| 2 | 2.6 | showcase | Diagnosing the Jitter: A JVM Latency Investigation in a Live Price Stream | 15 min | `written` |
-| 3 | 3.1 | keyword | Idempotency: Why Sending a Message Twice Should Be the Same as Sending It Once | 5 min | `written` |
-| 3 | 3.2 | keyword | Kafka Transactions: Atomically Producing to Multiple Partitions | 5 min | `written` |
-| 3 | 3.3 | keyword | Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee | 5 min | `planned` |
-| 3 | 3.4 | keyword | Compacted Topics: Kafka as a Latest-State Key-Value Store | 5 min | `written` |
-| 3 | 3.5 | keyword | Consumer Group Rebalancing: Why Your Kafka Consumer Stops and How to Minimise It | 5 min | `planned` |
-| 3 | 3.6 | showcase | Zero Data Loss, Zero Duplication: Designing a Fault-Tolerant Kafka Price Pipeline | 15 min | `planned` |
-| 4 | 4.1 | keyword | The S.T.A.R. Method: Structuring Technical Leadership Stories That Land | 5 min | `planned` |
-| 4 | 4.2 | keyword | Technical Debt Management: Making the Case for Quality Without Slowing the Team | 5 min | `planned` |
-| 4 | 4.3 | keyword | Post-mortems: Turning Production Incidents Into Engineering Assets | 5 min | `planned` |
-| 4 | 4.4 | keyword | Mentoring Junior Devs: Growing Engineers Without Becoming a Bottleneck | 5 min | `planned` |
-| 4 | 4.5 | keyword | Stakeholder Management: How a Tech Lead Sells Technical Decisions Upward | 5 min | `planned` |
-| 4 | 4.6 | showcase | Raising the Bar Without Breaking the Team: A Tech Lead's Year of Change | 15 min | `planned` |
-
-**Total: 24 posts — 21 keyword posts (5 min each) + 3 showcase articles (15 min each) + 1 leadership showcase (15 min)**
