@@ -428,7 +428,7 @@ Approximately 800–1000 words of prose, possibly with a simple ASCII diagram of
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *TLABs: How the JVM Makes Object Allocation Fast (and When It Doesn't)* |
 | **Target read time** | 5 minutes |
