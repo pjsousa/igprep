@@ -819,7 +819,7 @@ Approximately 800–1000 words of prose.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Compacted Topics: Kafka as a Latest-State Key-Value Store* |
 | **Target read time** | 5 minutes |
@@ -827,36 +827,6 @@ Approximately 800–1000 words of prose.
 | **Overview** | Explains Kafka log compaction, how the cleaner thread retains only the latest value per key while deleting older messages, how tombstone records enable deletion, and how compacted topics enable consumers to rebuild the latest state of an instrument price table after a restart. |
 | **Why it matters** | Compacted topics solve the "cold-start" / "state rebuild" problem for price caches. A Tech Lead designing a price distribution system must know this mechanism to avoid incorrect design choices (e.g. using an external cache unnecessarily). |
 | **Dependencies** | Post 3.1 (Idempotency) recommended for context. |
-
-**Kick-off prompt:**
-
-```
-You are a technical blog post writer helping a candidate prepare for a Tech Lead Java Engineer interview at a FTSE 100 financial trading company.
-
-The preparation plan is derived from `prep-plan-1.md`. The candidate is building depth in Kafka reliability for mission-critical price pipelines.
-
-Series: "Distributed Reliability: Kafka for Mission-Critical Pipelines"
-Series goal: Design and operate a Kafka pipeline where no price is lost and no price is delivered twice.
-
-This is Post 4 in the series. Previous posts: Idempotency, Kafka Transactional Producer, Exactly-Once Semantics.
-
-Post objective:
-Write a 5-minute technical blog post titled: "Compacted Topics: Kafka as a Latest-State Key-Value Store"
-Keyword covered: Compacted Topics
-
-The post must:
-- Explain Kafka's default log retention: time-based or size-based deletion of entire log segments.
-- Explain log compaction: the cleaner thread scans the "dirty" portion of the log and retains only the latest record per key, deleting older values.
-- Explain tombstone records: a record with a null value signals deletion; the compaction cleaner eventually removes the key entirely after a `delete.retention.ms` period.
-- Explain the compaction guarantee: consumers can always reconstruct the latest state of all keys by reading the entire compacted topic from the beginning.
-- Show a concrete use case: `instrument-prices` compacted topic keyed by instrument ID; a new price service starting up replays the topic to rebuild its in-memory price cache without needing a separate database.
-- Discuss the trade-off: compaction is not instantaneous; there is a "dirty ratio" window during which newer messages co-exist with older ones.
-- Contrast with a snapshot+delta pattern.
-- Be senior-level in tone.
-- End with "Why this matters in production."
-
-Approximately 800–1000 words of prose.
-```
 
 ---
 
@@ -1276,7 +1246,7 @@ Write only this post. Approximately 2500–3000 words.
 | 3 | 3.1 | keyword | Idempotency: Why Sending a Message Twice Should Be the Same as Sending It Once | 5 min | `written` |
 | 3 | 3.2 | keyword | Kafka Transactions: Atomically Producing to Multiple Partitions | 5 min | `written` |
 | 3 | 3.3 | keyword | Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee | 5 min | `planned` |
-| 3 | 3.4 | keyword | Compacted Topics: Kafka as a Latest-State Key-Value Store | 5 min | `planned` |
+| 3 | 3.4 | keyword | Compacted Topics: Kafka as a Latest-State Key-Value Store | 5 min | `written` |
 | 3 | 3.5 | keyword | Consumer Group Rebalancing: Why Your Kafka Consumer Stops and How to Minimise It | 5 min | `planned` |
 | 3 | 3.6 | showcase | Zero Data Loss, Zero Duplication: Designing a Fault-Tolerant Kafka Price Pipeline | 15 min | `planned` |
 | 4 | 4.1 | keyword | The S.T.A.R. Method: Structuring Technical Leadership Stories That Land | 5 min | `planned` |
