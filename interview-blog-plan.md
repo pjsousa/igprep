@@ -48,7 +48,7 @@
 | 3 | 3.3 | keyword | Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee | 5 min | `written` |
 | 3 | 3.4 | keyword | Compacted Topics: Kafka as a Latest-State Key-Value Store | 5 min | `written` |
 | 3 | 3.5 | keyword | Consumer Group Rebalancing: Why Your Kafka Consumer Stops and How to Minimise It | 5 min | `written` |
-| 3 | 3.6 | showcase | Zero Data Loss, Zero Duplication: Designing a Fault-Tolerant Kafka Price Pipeline | 15 min | `planned` |
+| 3 | 3.6 | showcase | Zero Data Loss, Zero Duplication: Designing a Fault-Tolerant Kafka Price Pipeline | 15 min | `written` |
 | 4 | 4.1 | keyword | The S.T.A.R. Method: Structuring Technical Leadership Stories That Land | 5 min | `planned` |
 | 4 | 4.2 | keyword | Technical Debt Management: Making the Case for Quality Without Slowing the Team | 5 min | `planned` |
 | 4 | 4.3 | keyword | Post-mortems: Turning Production Incidents Into Engineering Assets | 5 min | `planned` |
