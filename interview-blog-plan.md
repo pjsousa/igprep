@@ -518,7 +518,7 @@ Approximately 800–1000 words of prose.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Shenandoah GC: Concurrent Compaction Without Stopping the World* |
 | **Target read time** | 5 minutes |
