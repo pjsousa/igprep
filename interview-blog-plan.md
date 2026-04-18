@@ -52,7 +52,7 @@
 | 4 | 4.1 | keyword | The S.T.A.R. Method: Structuring Technical Leadership Stories That Land | 5 min | `written` |
 | 4 | 4.2 | keyword | Technical Debt Management: Making the Case for Quality Without Slowing the Team | 5 min | `written` |
 | 4 | 4.3 | keyword | Post-mortems: Turning Production Incidents Into Engineering Assets | 5 min | `written` |
-| 4 | 4.4 | keyword | Mentoring Junior Devs: Growing Engineers Without Becoming a Bottleneck | 5 min | `planned` |
+| 4 | 4.4 | keyword | Mentoring Junior Devs: Growing Engineers Without Becoming a Bottleneck | 5 min | `written` |
 | 4 | 4.5 | keyword | Stakeholder Management: How a Tech Lead Sells Technical Decisions Upward | 5 min | `planned` |
 | 4 | 4.6 | showcase | Raising the Bar Without Breaking the Team: A Tech Lead's Year of Change | 15 min | `planned` |
 
@@ -1121,7 +1121,7 @@ Approximately 800–1000 words.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Mentoring Junior Devs: Growing Engineers Without Becoming a Bottleneck* |
 | **Target read time** | 5 minutes |
