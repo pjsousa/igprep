@@ -1274,7 +1274,7 @@ Write only this post. Approximately 2500–3000 words.
 | 2 | 2.5 | keyword | ZGC: Sub-Millisecond Pauses at Any Heap Size | 5 min | `planned` |
 | 2 | 2.6 | showcase | Diagnosing the Jitter: A JVM Latency Investigation in a Live Price Stream | 15 min | `written` |
 | 3 | 3.1 | keyword | Idempotency: Why Sending a Message Twice Should Be the Same as Sending It Once | 5 min | `written` |
-| 3 | 3.2 | keyword | Kafka Transactions: Atomically Producing to Multiple Partitions | 5 min | `planned` |
+| 3 | 3.2 | keyword | Kafka Transactions: Atomically Producing to Multiple Partitions | 5 min | `written` |
 | 3 | 3.3 | keyword | Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee | 5 min | `planned` |
 | 3 | 3.4 | keyword | Compacted Topics: Kafka as a Latest-State Key-Value Store | 5 min | `planned` |
 | 3 | 3.5 | keyword | Consumer Group Rebalancing: Why Your Kafka Consumer Stops and How to Minimise It | 5 min | `planned` |
