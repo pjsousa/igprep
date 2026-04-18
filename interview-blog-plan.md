@@ -834,7 +834,7 @@ Approximately 800–1000 words of prose.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Consumer Group Rebalancing: Why Your Kafka Consumer Stops and How to Minimise It* |
 | **Target read time** | 5 minutes |
