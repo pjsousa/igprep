@@ -89,7 +89,7 @@ Do not write the next post in the series. Write only this post. Keep it to appro
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *AtomicReference: CAS Applied to Object State in Java* |
 | **Target read time** | 5 minutes |
