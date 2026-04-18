@@ -175,7 +175,7 @@ Approximately 800–1000 words of prose plus code.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Memory Barriers: What the JVM Guarantees (and What It Doesn't)* |
 | **Target read time** | 5 minutes |
