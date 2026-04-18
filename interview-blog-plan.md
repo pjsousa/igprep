@@ -220,7 +220,7 @@ Approximately 800–1000 words of prose plus code.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Thread Affinity: Pinning Java Threads to CPU Cores for Predictable Latency* |
 | **Target read time** | 5 minutes |
