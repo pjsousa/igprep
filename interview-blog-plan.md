@@ -609,7 +609,7 @@ Approximately 800–1000 words of prose plus JVM flag examples.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `showcase` |
 | **Title** | *Diagnosing the Jitter: A JVM Latency Investigation in a Live Price Stream* |
 | **Target read time** | 15 minutes |
@@ -1272,7 +1272,7 @@ Write only this post. Approximately 2500–3000 words.
 | 2 | 2.3 | keyword | JIT Compilation: How the JVM Gets Faster Over Time — and When It Slows Down | 5 min | `planned` |
 | 2 | 2.4 | keyword | Shenandoah GC: Concurrent Compaction Without Stopping the World | 5 min | `planned` |
 | 2 | 2.5 | keyword | ZGC: Sub-Millisecond Pauses at Any Heap Size | 5 min | `planned` |
-| 2 | 2.6 | showcase | Diagnosing the Jitter: A JVM Latency Investigation in a Live Price Stream | 15 min | `planned` |
+| 2 | 2.6 | showcase | Diagnosing the Jitter: A JVM Latency Investigation in a Live Price Stream | 15 min | `written` |
 | 3 | 3.1 | keyword | Idempotency: Why Sending a Message Twice Should Be the Same as Sending It Once | 5 min | `planned` |
 | 3 | 3.2 | keyword | Kafka Transactions: Atomically Producing to Multiple Partitions | 5 min | `planned` |
 | 3 | 3.3 | keyword | Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee | 5 min | `planned` |
