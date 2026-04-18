@@ -1,5 +1,5 @@
 # Interview Blog Post Plan
-> Derived from `prep-plan-1.md` — Tech Lead Java Engineer preparation for a FTSE 100 company interview.
+> Derived from `prep-plan-1.md` and `prep-plan-2.md` — Tech Lead Java Engineer preparation for a FTSE 100 company interview.
 > Every post is `planned`. Do not write any post until instructed.
 
 ---
@@ -20,6 +20,7 @@
 | 2 | JVM Internals: Taming Latency in Financial Systems | Block 2 | 5 keyword posts + 1 showcase |
 | 3 | Distributed Reliability: Kafka for Mission-Critical Pipelines | Block 3 | 5 keyword posts + 1 showcase |
 | 4 | The Fintech Tech Lead: Leadership Under Pressure | Block 4 | 5 keyword posts + 1 showcase |
+| 5 | Hibernate/JPA: ORM Mastery Beyond CRUD | Block 5 | 10 keyword posts + 1 showcase |
 
 ---
 
@@ -55,8 +56,19 @@
 | 4 | 4.4 | keyword | Mentoring Junior Devs: Growing Engineers Without Becoming a Bottleneck | 5 min | `written` |
 | 4 | 4.5 | keyword | Stakeholder Management: How a Tech Lead Sells Technical Decisions Upward | 5 min | `written` |
 | 4 | 4.6 | showcase | Raising the Bar Without Breaking the Team: A Tech Lead's Year of Change | 15 min | `written` |
+| 5 | 5.1 | keyword | JPA Persistence Context: The Hidden State Manager in Every Spring App | 5 min | `planned` |
+| 5 | 5.2 | keyword | Entity Lifecycle: The Four States Every JPA Object Passes Through | 5 min | `planned` |
+| 5 | 5.3 | keyword | Dirty Checking: How Hibernate Knows What Changed (Without You Telling It) | 5 min | `planned` |
+| 5 | 5.4 | keyword | Flush vs Commit: When Hibernate Writes to the Database (and When It Doesn't) | 5 min | `planned` |
+| 5 | 5.5 | keyword | The N+1 Problem: The ORM Trap That Kills Production Performance | 5 min | `planned` |
+| 5 | 5.6 | keyword | Fetch Join: Solving N+1 Without Switching to Native SQL | 5 min | `planned` |
+| 5 | 5.7 | keyword | Lazy vs Eager Loading: Choosing the Right Fetch Strategy for Every Association | 5 min | `planned` |
+| 5 | 5.8 | keyword | Optimistic Locking: Preventing Lost Updates Without Holding a Lock | 5 min | `planned` |
+| 5 | 5.9 | keyword | @Version: Implementing Optimistic Locking in Spring Data JPA | 5 min | `planned` |
+| 5 | 5.10 | keyword | Transaction Propagation: How Spring Decides When to Create, Join, or Reject a Transaction | 5 min | `planned` |
+| 5 | 5.11 | showcase | The ORM Trap Setter: How an Innocent Repository Call Became a Production Incident | 15 min | `planned` |
 
-**Total: 24 posts — 21 keyword posts (5 min each) + 3 showcase articles (15 min each) + 1 leadership showcase (15 min)**
+**Total: 35 posts — 31 keyword posts (5 min each) + 4 showcase articles (15 min each)**
 
 
 
