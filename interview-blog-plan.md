@@ -774,7 +774,7 @@ Approximately 800–1000 words of prose plus Java producer code snippets.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *Exactly-Once Semantics in Kafka: The Full End-to-End Guarantee* |
 | **Target read time** | 5 minutes |
