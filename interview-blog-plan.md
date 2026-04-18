@@ -473,7 +473,7 @@ Approximately 800–1000 words of prose plus command-line flags and log output e
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *JIT Compilation: How the JVM Gets Faster Over Time — and When It Slows Down* |
 | **Target read time** | 5 minutes |
