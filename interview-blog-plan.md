@@ -132,7 +132,7 @@ Do not write any other posts. Approximately 800–1000 words of prose plus code.
 
 | Field | Value |
 |---|---|
-| **Status** | `planned` |
+| **Status** | `written` |
 | **Post type** | `keyword post` |
 | **Title** | *False Sharing: The Silent Cache-Line Killer in Multithreaded Java* |
 | **Target read time** | 5 minutes |
