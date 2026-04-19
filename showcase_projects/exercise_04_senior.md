@@ -1,18 +1,20 @@
-# Senior-Level Price Match Service — Exercise
+# Senior-Level Price Match Service — Exercise 04
 
 ## Objective
 
-Take the naive Price Match Service from Exercise 01 and transform it into a lock-free, cache-line-aware, allocation-efficient system — without changing the overall architecture. Same ingestion pipeline, same listener model, same single-JVM scope. Every change you make is a focused, surgical optimisation grounded in hardware-aware Java.
+Take the mutex-locked Price Match Service from Exercise 03 and transform it into a lock-free, cache-line-aware, allocation-efficient system — without changing the overall architecture. Same ingestion pipeline, same listener model, same single-JVM scope. Every change you make is a focused, surgical optimisation grounded in hardware-aware Java.
 
-By the end of this exercise you should be able to sustain **300,000–600,000 updates/second** on commodity hardware and explain exactly which hardware or JVM constraint limits further scaling. The remaining gap to 1,000,000 updates/second points directly toward the architectural changes in Exercise 03.
+By the end of this exercise you should be able to sustain **300,000–600,000 updates/second** on commodity hardware and explain exactly which hardware or JVM constraint limits further scaling. The remaining gap to 1,000,000 updates/second points directly toward the architectural changes in Exercise 05.
 
 ---
 
 ## Background & Motivation
 
-Exercise 01 taught you *where* the bottlenecks are. This exercise teaches you *how to remove them* using the techniques from **Series 1 — Lock-Free Java: Mechanical Sympathy for the Trading Floor**.
+Exercises 01–03 showed you the progression from a single-threaded baseline, through the chaos of unsynchronised concurrent access, to a correctly synchronised but contention-bound system. Exercise 03 specifically quantified what correctness costs: threads spending a measurable fraction of their time in `BLOCKED` state, waiting to acquire the `PriceCache` monitor.
 
-The naive implementation had four compounding problems:
+That contention is the starting point here. This exercise teaches you *how to remove it* using the techniques from **Series 1 — Lock-Free Java: Mechanical Sympathy for the Trading Floor**.
+
+The Exercise 03 implementation had four compounding problems:
 
 | Problem | Root cause | The fix you will apply |
 |---|---|---|
@@ -21,7 +23,7 @@ The naive implementation had four compounding problems:
 | New `PriceTick` per update | Eden saturation, TLAB refill stalls, Minor GC pauses | Replace with a fixed object pool |
 | Unpadded shared state | False sharing between independently-updated `long` fields | Add cache-line padding via `@Contended` or manual padding |
 
-None of these fixes requires changing your API surface or adding a new dependency on the LMAX Disruptor (that comes in Exercise 03). This exercise is about proving fluency with the underlying primitives: CAS, `AtomicReference`, false sharing mitigation, and memory barriers.
+None of these fixes requires changing your API surface or adding a new dependency on the LMAX Disruptor (that comes in Exercise 05). This exercise is about proving fluency with the underlying primitives: CAS, `AtomicReference`, false sharing mitigation, and memory barriers.
 
 **Series 1 posts to study before starting:**
 - Post 1.1 — *CAS Explained: The Atomic Primitive That Replaced the Lock*
@@ -35,7 +37,7 @@ None of these fixes requires changing your API surface or adding a new dependenc
 
 ### Functional Requirements
 
-Same as Exercise 01:
+Same as Exercises 01–03:
 - Accept price updates for up to 10,000 instruments.
 - Maintain the latest known price for each instrument.
 - Deliver updates to registered `PriceListener` callbacks.
@@ -43,7 +45,7 @@ Same as Exercise 01:
 
 ### Non-Functional Requirements
 
-- **Throughput target:** 300,000–600,000 updates/second sustained over 30 seconds (up from Exercise 01's baseline, still short of the 1M target — that gap motivates Exercise 03).
+- **Throughput target:** 300,000–600,000 updates/second sustained over 30 seconds (up from Exercise 03's contention-bound baseline, still short of the 1M target — that gap motivates Exercise 05).
 - **Latency target:** p99 update-to-listener latency below 100 microseconds under sustained load. You will measure this for the first time in this exercise.
 - **GC target:** Young GC pauses below 10ms, frequency below 1 per second.
 
@@ -83,7 +85,7 @@ do {
 - What is the ABA problem? Does it apply here? (Hint: we're replacing an entire map reference, not a node pointer — think about why ABA is or isn't a risk in this specific scenario.)
 
 **Validation:**
-- Re-run the Exercise 01 load test. Throughput should increase. Confirm that the `jstack` output no longer shows threads blocked on `PriceCache`'s monitor.
+- Re-run the Exercise 03 load test. Throughput should increase. Confirm that the `jstack` output no longer shows threads blocked on `PriceCache`'s monitor — the BLOCKED state you measured in Exercise 03 should disappear entirely.
 
 ---
 
@@ -213,7 +215,7 @@ For production-quality histograms, read about HDRHistogram (referenced in the sh
 
 **What to run:**
 
-With all four optimisations applied, repeat the full 30-second load test from Exercise 01 with identical parameters (4 producer threads, 10,000 instruments, maximum submission rate).
+With all four optimisations applied, repeat the full 30-second load test with identical parameters to Exercise 03 (4 producer threads, 10,000 instruments, maximum submission rate).
 
 Document:
 1. Achieved throughput (updates/second).
@@ -252,3 +254,4 @@ You have completed this exercise when:
 - [ ] You can report p99 latency (not just throughput) from your load test.
 - [ ] You can explain the single remaining bottleneck that prevents reaching 1,000,000 updates/second and articulate what architectural change would address it.
 - [ ] You can answer all six Bottleneck Questions verbally, with reference to specific blog posts from Series 1.
+- [ ] You can compare your JStack output from Exercise 03 (threads in BLOCKED state) with the output from this exercise (no BLOCKED threads) and explain exactly what changed and why.

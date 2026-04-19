@@ -11,3 +11,10 @@ interview 2:
     - CANDIDATE
         - https://www.perplexity.ai/search/ready-fErLihJsRaOYAb3rhy6q8A?sm=d
 
+
+Notebook LM:
+    - First one with block 1 and 2 blog posts
+        - https://notebooklm.google.com/notebook/c73ca2d4-8235-4ff8-b4b1-98522bc29322
+    - Kafka ones
+        - https://notebooklm.google.com/notebook/737373c7-3752-488a-9ba2-3dfd60b9aec8
+
