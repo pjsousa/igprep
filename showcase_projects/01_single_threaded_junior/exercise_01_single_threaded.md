@@ -182,6 +182,15 @@ Run your load test and observe:
 
 You do not need to fix anything yet. Observe, record numbers, and prepare to answer the Bottleneck Questions below.
 
+#### First Run
+
+> make run-gclog
+Total submitted: 492007096
+Total delivered: 492007096
+Throughput: 1.6400236533333333E7 updates/second
+
+(~16_400_236 updates/sec)
+
 ---
 
 ## Bottleneck & Reflection Questions
@@ -190,15 +199,36 @@ Think through each question before moving to Exercise 02.
 
 1. **The single-thread ceiling.** Your load test shows that one thread can process roughly X updates/second. At 1,000,000 updates/second, you need approximately `1,000,000 / X` threads to meet the target (ignoring overhead). What was your measured X? Does that calculation suggest parallelism is the right lever?
 
+> A: 1,000,000 / 16,500,000 ≈ 0.06 threads
+
 2. **Synchronous listener invocation.** Each call to `submit()` invokes all registered listeners before returning. If a listener does expensive work (e.g. serialises a message and sends it over a socket), how does that affect throughput? What would the call-graph look like in a profiler? Is the bottleneck in `PriceCache.update()` or in listener dispatch?
+
+> A: Synchronous listener invocation A slow listener (onPrice does socket I/O, serialisation) blocks submit() — the caller can't proceed until the listener finishes. The call-graph in a profiler would show submit() at the top, with listener time nested inside it. Bottleneck is in the listener, not cache.update().
 
 3. **Allocation rate.** At your measured throughput, calculate: `throughput × sizeof(PriceTick)` in MB/s. Compare this to a typical L1 cache size (32–64KB) and TLAB size (512KB–4MB). How quickly are you filling TLABs? How does this manifest in the GC log?
 
+> A: Allocation rate At 16.5M updates/second × ~60 bytes per tick ≈ 990 MB/s allocation. TLAB fills in ~1ms; GC fires every ~80ms collecting ~80 TLABs. Each Young GC pause is ~0.5ms — 0.6% overhead, sustainable. System is in equilibrium until thread count increases.
+
+
 4. **Why parallelism won't simply fix this.** If you spawn 4 producer threads all calling `submit()` simultaneously with the current implementation, what will happen? (Hint: they will all share the same `HashMap` without any protection. Think about what `HashMap` does when two threads call `put()` concurrently.) This is exactly what Exercise 02 explores.
+
+> A: Two threads without synchronisation HashMap.put() and HashMap.get() are not thread-safe. Concurrent writes cause: lost updates (one thread's write overwritten by another), hash chain corruption, and undefined internal state. SubscriptionRegistry and PriceCache both corrupt. submitted != delivered.
 
 5. **Profiling the hot path.** If you ran a CPU profiler (JFR, async-profiler, or YourKit) on this load test, which method would dominate the CPU samples? `HashMap.put()`? `HashMap.get()`? `PriceTick` construction? Reason through it before profiling, then verify.
 
+> A: Profiling the hot path CPU profiler: StringBuilder.append() and String.valueOf() inside "INST-" + instrumentIndex dominate. HashMap.put() also appears but is lighter. Listener is a no-op so onPrice() is invisible. Allocation profiler shows PriceTick and String creation at ~990 MB/s.
+
 6. **The correct-but-slow trade-off.** This implementation is trivially correct and trivially slow. Name three properties of this design that make it correct. Name three properties that make it slow. This question has a precise answer — write it down before moving on.
+
+> A: Correct-but-slow trade-off 
+    Correct: 
+        (1) No race conditions — one thread, sequential state transitions. 
+        (2) No visibility problems — all writes visible to subsequent ops. 
+        (3) No lock contention — zero synchronisation overhead, trivially reasoning about state. 
+    Slow: 
+        (1) Single CPU core — ceiling at one thread's throughput. 
+        (2) Synchronous dispatch — slow listener blocks the pipeline. 
+        (3) High allocation rate — ~990 MB/s creates GC pressure even at 0.5ms pauses
 
 ---
 
