@@ -13,8 +13,17 @@ interview 2:
 
 
 Notebook LM:
-    - First one with block 1 and 2 blog posts
+    
+    - Sourced from 01-lock-free-java
+        - https://notebooklm.google.com/notebook/b36d1541-6866-455e-8fa3-6ea6b7aea2a0
+    - Sourced from 02-jvm-internals
+        - https://notebooklm.google.com/notebook/8955b0fe-6296-4864-8e30-ff004fcbd394
+    - Sourced from 01-lock-free-java + 02-jvm-internals
         - https://notebooklm.google.com/notebook/c73ca2d4-8235-4ff8-b4b1-98522bc29322
     - Kafka ones
         - https://notebooklm.google.com/notebook/737373c7-3752-488a-9ba2-3dfd60b9aec8
+
+
+Prompt Engineer
+    - https://www.perplexity.ai/search/hey-Oig6WL5mRAOHpKJTMJic4w
 
