@@ -242,3 +242,31 @@ You have completed this exercise when:
 - [ ] You have verified that a single CPU core is at 100% and all other cores are idle during the test.
 - [ ] You can answer all six Bottleneck Questions verbally, with specific numbers from your measurements.
 - [ ] You have written down what you expect to happen when you add a second thread without any synchronisation — that prediction is what Exercise 02 tests.
+
+---
+
+## Reviewer Verdict
+
+**🔁 REVISIT — Specific Gap**
+
+### What was demonstrated well
+
+- Functional correctness: `totalSubmitted == totalDelivered` (480,782,691) confirmed over a 30-second run.
+- Throughput measured at ~16M updates/second — a credible single-thread baseline.
+- GC logs produced and interpreted: G1 collecting every ~80ms with ~0.6ms pauses, Eden filling to ~112-117MB per cycle, consistent with ~960 MB/s allocation rate.
+- Q5 answered correctly: `"INST-" + instrumentIndex` via `StringBuilder` is the dominant allocation pressure, not `PriceTick` construction itself.
+- Q1 partial comprehension: correctly identified that 16M >> 1M target, and that parallelism + real-world listener costs are what drive the need for scaling.
+
+### The specific gap
+
+**Q2 (synchronous listener invocation) and Q3 (TLAB/GC calculation) were imprecise; Q4 lacked the specific mechanism.**
+
+Q2 required recognising that in a synchronously-dispatched system, `submit()` is blocked inside `listener.onPrice(tick)` for the entire duration of the listener's work. The bottleneck is in the listener — `cache.update()` is irrelevant when the listener is slow. The call stack must be traced: main thread → `submit()` → `cache.update()` → `registry.getListeners()` → **`listener.onPrice(tick)` ← socket I/O happens here, caller is blocked**.
+
+Q3 required working through: allocation rate (960 MB/s) ÷ TLAB size = TLABs per second; then ÷ GC interval to get TLABs per GC cycle. The exercise's reference answer gives ~80 TLABs per ~80ms cycle, but the engineer's answer ("TLABs 1MB > 80 TLABs between events") did not complete the reasoning.
+
+Q4 required naming the specific mechanism — `HashMap.put()` is not thread-safe; two threads calling `put()` concurrently can overwrite entries or corrupt the hash-chain. "Lost updates and data corruption" names the symptoms, not the mechanism.
+
+### Actionable direction to close the gap
+
+Trace the `submit()` call stack on paper with a slow listener. Draw it: `main → submit() → cache.update() → registry.getListeners() → listener.onPrice(tick)`. Label where socket I/O occurs and which thread is blocked at each step. Once that stack is traceable and the blocking relationship is explainable in words, the core learning objective of Exercise 01 is met.
