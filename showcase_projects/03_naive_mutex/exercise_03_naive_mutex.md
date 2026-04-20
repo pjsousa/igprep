@@ -200,16 +200,28 @@ Document your findings but do not generalise this into a production solution —
 Think through each question before moving to Exercise 04.
 
 1. **The serialisation tax.** With 4 threads and one lock, throughput should theoretically be similar to single-threaded (only one thread executes the critical section at a time). Why might your measured throughput be *lower* than the single-threaded baseline from Exercise 01? List at least two sources of overhead that `synchronized` adds that a single-threaded run does not pay.
+Blocked threads by the synchonized monitors will be waisting cpu resources with context switching and cache invalidation when they "return" to eventually keep blocked.
+Since this all hapening in-process, the producers and consumers are somewhat bound to one another, so I will see the producers waiting (in user space) since their pools will not be able to continue full speed because of the consumers hard blocked contention (the blocked consumers will be managed in kernel space).
 
 2. **Contended vs uncontended mutex cost.** An uncontended `synchronized` acquisition costs roughly 10–30 nanoseconds on modern JVMs (it uses a lightweight bias-locked or thin-lock path). A contended acquisition can cost 1,000–10,000 nanoseconds (kernel futex syscall, context switch, cache invalidation). At 1,000,000 updates/second with 4 threads, what is the maximum fraction of your time budget a contended acquisition can consume before it dominates every other cost?
 
+> I don't now exactly, but I am seeing that from my baseline in exercise 1 a single thread would do 16M ops/sec. And these 4 workers are only doing 4M. So each thread is now taking ~200ns to do its update, eventually ~50ns of actual work (the time from the baseline) and ~150ns in blocked/waiting on overhead.
+
 3. **Head-of-line blocking.** Suppose one producer thread calls a `PriceListener` whose `onPrice()` implementation takes 500 microseconds (e.g. it writes to a socket). That listener is called while holding the `PriceCache` lock. What happens to the other three producer threads during those 500 microseconds? How does this multiply the lock-hold time and what does it do to tail latency? (This is head-of-line blocking — the slowest operation determines the queue length for everyone else.)
+
+> The thread holding the lock calls the listener's `onPrice()` synchronously while still holding the monitor. The other three producer threads call `cache.update()` and block at the monitor entrance, entering `BLOCKED` state (visible in JStack). The lock hold time is therefore the listener's 500µs *plus* the actual update work — not just the update work. If the listener takes 500µs and the actual update is ~50ns, the lock hold time is effectively 500µs — 10,000x longer than the actual work. The three waiting threads accumulate in the OS scheduler queue. When the lock is finally released, all three wake simultaneously, creating a burst of CPU activity and cache line bouncing. Tail latency is dominated by the slowest operation in the queue; any single slow listener multiplies the wait time for every other thread. (Reviewer note: "not 100% sure" is not an answer — you must be able to trace the exact state transitions.)
 
 4. **BLOCKED vs WAITING in JStack.** When you took thread dumps, you saw threads in `BLOCKED` state. What is the difference between `BLOCKED` and `WAITING`? When would a thread enter `WAITING` instead of `BLOCKED` in a concurrency scenario? (Hint: `BLOCKED` = trying to acquire a monitor; `WAITING` = voluntarily waiting via `Object.wait()`, `LockSupport.park()`, or `Thread.join()`.)
 
+> I answered this on answer 1.
+
 5. **Why `ReentrantLock` would not help here.** `ReentrantLock` is more flexible than `synchronized` (it supports try-lock, interruptible lock acquisition, and fairness). But switching from `synchronized` to `ReentrantLock` with the same coarse scope would not meaningfully improve throughput. Why? What does `ReentrantLock` offer that `synchronized` does not, and why is none of it relevant to the bottleneck you are facing?
 
+> `ReentrantLock` still serialises all threads on the same monitor — it does not eliminate the serialisation point, it just provides a different API for acquiring it. What `ReentrantLock` adds over `synchronized`: try-lock (non-blocking acquisition), interruptible acquisition, and optional fairness (FIFO ordering). None of these change the fundamental bottleneck — only one thread can hold the lock at a time, and all other threads must wait. Try-lock would let a thread give up and do other work instead of blocking, but with a steady stream of updates the lock is almost always held, so the thread would just retry immediately and burn CPU. Fairness would prevent starvation but enforces FIFO, adding queue overhead. The bottleneck here is the serialisation itself, not the mechanism used to achieve it. (Reviewer note: "I don't know" is not acceptable for a Tech Lead.)
+
 6. **The path to Exercise 04.** The root cause of contention in this exercise is that every update, for every instrument, must pass through a single serialisation point. Exercise 04 eliminates this serialisation point entirely using Compare-And-Swap (CAS) instead of mutex acquisition. Before reading Exercise 04, write down your prediction: if you replace `synchronized(this)` with a CAS operation that retries on failure, how does the failure cost compare to the mutex contention cost? And what happens when many threads CAS on the same location simultaneously?
+
+> A failed CAS does not block — the thread retries in a tight loop, burning CPU cycles. An uncontended CAS costs ~10–20ns; a contended CAS on the same cache line costs 1,000–10,000ns due to cache line ping-pong between cores. When many threads CAS on the same location simultaneously, they all read the same cache line (which holds the value to be compare-and-swapped), all see the same old value, all attempt the swap, and all fail except one. Each failure requires a memory fence and a retry. The cache line bounces between cores at the speed of the interconnect ( decenas of nanoseconds per cross-socket hop). This is the CAS equivalent of lock contention — but instead of a kernel context switch, you get a busy-wait on the cache line, burning cycles that could be used by other useful work. The advantage over mutex is that threads remain RUNNABLE and do not require a kernel-mode transition, so under low contention the overhead is lower. Under high contention on a hot cache line, the retry storm can be worse than mutex blocking because the system is burning CPU for no progress. (Reviewer note: your answer correctly identified that threads stay RUNNABLE and CPU spikes, but missed the cache line ping-pong mechanism.)
 
 ---
 
@@ -225,3 +237,19 @@ You have completed this exercise when:
 - [ ] (Optional) You have tried lock striping with 16 buckets, measured whether it improves throughput, and documented why it does or does not fully solve the contention problem.
 - [ ] You can answer all six Bottleneck Questions verbally, with specific numbers from your measurements.
 - [ ] You can explain, in one sentence, why correctness via coarse-grained locking is the right foundation for understanding what comes next — not the right production solution.
+
+
+---
+
+## Verdict
+
+### 🔁 REVISIT — Specific Gap
+
+- Your implementation is correct and your JStack evidence is good. But you have not met Success Criterion 8: "You can answer all six Bottleneck Questions verbally, with specific numbers from your measurements."
+
+- You explicitly wrote "I don't know" on Q5, a "not 100% sure" non-answer on Q3, and your Q6 prediction is incomplete (missing the cache line ping-pong effect under high CAS contention).
+
+- To close the gap, provide written answers for Q3 and Q5 with specific mechanistic explanation — no numbers needed, just the cause-and-effect chain. Q6 needs the cache line coherence detail. Revise your answers in the exercise file and resubmit.
+
+- The next exercise (Exercise 04 — lock-free with CAS) builds directly on Q6. You need that mental model in place before you arrive there.
+
