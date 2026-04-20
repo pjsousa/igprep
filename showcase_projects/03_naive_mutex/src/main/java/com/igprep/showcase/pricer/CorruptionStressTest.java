@@ -64,6 +64,8 @@ public class CorruptionStressTest {
             catch(InterruptedException e) {}
         }
 
+        service.shutdown();
+
         done = true;
         try
         {
@@ -81,8 +83,6 @@ public class CorruptionStressTest {
         System.out.println("Actual: " + actual);
         System.out.println("Lost: " + (expected - actual));
         System.out.println("Time: " + (elapsed / 1_000_000) + "ms");
-
-        service.shutdown();
     }
 
 }

@@ -9,22 +9,22 @@ public class PriceCache {
 
     private HashMap<String, PriceTick> cache = new HashMap<>();
 
-    void update(PriceTick tick){
+    synchronized void update(PriceTick tick){
         cache.put(tick.instrumentId(), tick);
         lastPrice = tick.price();
         totalUpdatesProcessed++;
     }
 
-    PriceTick getLatest(String instrumentId){
+    synchronized PriceTick getLatest(String instrumentId){
         return cache.get(instrumentId);
     }
 
-    long getTotalUpdatesProcessed()
+    synchronized long getTotalUpdatesProcessed()
     {
         return totalUpdatesProcessed;
     }
 
-    double getLastPrice()
+    synchronized double getLastPrice()
     {
         return lastPrice;
     }

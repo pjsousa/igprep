@@ -42,5 +42,12 @@ public class PriceUpdateService {
     public void shutdown()
     {
         pool.shutdown();
+
+        try
+        {
+            pool.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS);
+        }
+        catch(InterruptedException e) {}
+        
     }
 }

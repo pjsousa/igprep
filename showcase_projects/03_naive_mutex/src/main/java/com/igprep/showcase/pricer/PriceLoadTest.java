@@ -81,7 +81,7 @@ public class PriceLoadTest {
 
         long submitted = submittedCount[0] + submittedCount[1] + submittedCount[2] + submittedCount[3];
 
-        System.out.println("---");
+        System.out.println("\n---");
 
         System.out.printf("Total submitted:     %,d%n", submitted);
         System.out.printf("Total delivered:     %,d%n", deliveredCount[0]);
