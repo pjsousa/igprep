@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.register('runLoadTest', JavaExec) {
+    classSource.setFrom(sourceSets.main.runtimeClasspath)
+    workingDir = project.layout.buildDirectory
+    mainClass = 'com.igprep.showcase.pricer.PriceLoadTest'
+}
