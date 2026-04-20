@@ -254,6 +254,88 @@ You have completed this exercise when:
 
 ---
 
+## Review Verdict
+
+**Verdict: 🔁 REVISIT — Specific Gap**
+
+**Reviewed:** 2026-04-20  
+**Engineer:** Pedro  
+**Exercise:** 02 — Naive Multi-Threaded Price Match Service
+
+### Phase 1 — Correctness: ✅ PASS
+
+Implementation satisfies functional requirements. Verified:
+
+- Corruption stress test runs and produces non-zero lost-update discrepancy reliably (verified: 196K–222K on repeated runs)
+- `ClassCastException: HashMap$Node cannot be cast to HashMap$TreeNode` captured multiple times — structural bucket corruption of `HashMap` under concurrent `put()` calls is observable
+- Stale reads confirmed: ~7,700–8,000 in ~300ms under `-server` (C2 JIT), ~7,300 in ~2,600ms under `-Xint`
+- Per-second stale-read rate: **~27,000/sec under C2 vs ~4,500/sec under interpreter**
+- `PriceLoadTest` (30s, 4 producers): ~2.2M updates/sec submitted with ~13M lost updates (~19% loss rate)
+- All constraint requirements met: no `synchronized`, no `volatile`, no `AtomicLong`, no `ConcurrentHashMap`; `Thread`, `Runnable`, and `ExecutorService` used correctly
+- Uncaught exception handler not explicitly configured on the thread pool, but `ClassCastException` is printed to `System.err` via the default uncaught exception handler — corruption was observable
+
+### Phase 2 — Bottleneck Comprehension: ⚠️ PARTIAL
+
+**Questions 1, 2, 4, 5: ✅ Demonstrated understanding**
+
+Engineer correctly identified:
+- Lost updates on `totalUpdatesProcessed` counter (non-atomic read-modify-write)
+- Stale reads on `lastPrice` (non-volatile field, JIT can hoist reads)
+- HashMap structural corruption (`ClassCastException` during `treeifyBin`)
+- Why C2 JIT makes stale reads worse per unit time (more aggressive optimisation)
+- Why `synchronized` everywhere in Exercise 03 will introduce contention and reduce throughput
+
+**Question 3: ❌ GAP — bytecode sequence not known**
+
+Engineer answered "i don't know" when asked to describe the exact bytecode sequence for `totalUpdatesProcessed++`.
+
+`totalUpdatesProcessed++` compiles to three JVM bytecode instructions:
+
+```
+0:  iload_2          // read totalUpdatesProcessed into operand stack
+1:  iinc    #4, 1   // increment local variable slot 4 by 1 (does NOT use operand stack)
+4:  istore_2         // store result back to local variable slot 2
+```
+
+Two interleaving threads produce a lost update because:
+- `iload` reads the value into a thread-local register
+- `iinc` modifies the register copy, not memory
+- `istore` writes the register back to memory — overwriting any concurrent write
+
+Without understanding this mechanism, reasoning about `AtomicLong` (CAS loop), `volatile` (memory barrier), or any lock-free pattern is impossible. This is the foundational concept the lock-free series builds on.
+
+### Phase 3 — Code Quality: ✅ Acceptable
+
+Code is clean, intentional, and demonstrates ownership of the design. Variable names are clear. No red flags suggesting copy-paste or guesswork.
+
+---
+
+### Required Remediation
+
+**Must address before advancing to Exercise 03:**
+
+Run `javap -c src/main/java/com/igprep/showcase/pricer/PriceCache.class` and study the bytecode output for `update()`. Then, without looking at reference material, explain in your own words:
+
+1. Why `iload`, `iinc`, and `istore` allow two concurrent threads to both increment the counter but only count once
+2. What would change if `totalUpdatesProcessed` were `volatile` (hint: the memory barrier inserted by `volatile` affects both the read and write paths)
+3. What would change if you used `AtomicLong.incrementAndGet()` instead (hint: CAS loop vs load/increment/store)
+
+Once you can explain the three-instruction sequence fluently, Exercise 03 (`synchronized`) and Exercise 04 (lock-free CAS) will make conceptual sense rather than feel like cargo-cult solutions.
+
+---
+
+### Summary
+
+Three of six Bottleneck Questions answered correctly with specific numbers.  
+**One critical gap:** inability to describe the bytecode mechanism behind the lost update.  
+**Code and empirical observations:** solid — the corruption is genuinely present and observable.
+
+Fix the bytecode gap, then proceed to Exercise 03.
+
+---
+
+---
+
 ## Observation summary
 
 Here's a draft based on your data:
