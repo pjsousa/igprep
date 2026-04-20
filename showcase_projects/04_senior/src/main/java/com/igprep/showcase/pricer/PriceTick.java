@@ -1,5 +1,11 @@
 package com.igprep.showcase.pricer;
 
-public record PriceTick(String instrumentId, double price, long timestamp) {
+public class PriceTick {
+    volatile String instrumentId;
+    volatile double price;
+    volatile long timestamp;
+    volatile boolean ready;
 
+    public PriceTick() {
+    }
 }

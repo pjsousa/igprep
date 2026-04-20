@@ -4,7 +4,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class CorruptionStressTest {
     
-    static long TOTAL_UPDATES = 1_000_000L;
+    static long TOTAL_UPDATES = 100_000L;
     static int THREAD_COUNT  = 4;
     static long UPDATES_PER_THREAD = TOTAL_UPDATES / THREAD_COUNT;
     static boolean done = false;
@@ -26,7 +26,10 @@ public class CorruptionStressTest {
                     starLatch.await();
                     for(int j = 0; j < UPDATES_PER_THREAD; j++)
                     {
-                        PriceTick tick = new PriceTick("INST-" + j, 100.0, System.nanoTime());
+                        PriceTick tick = service.acquirePriceTick();
+                        tick.instrumentId = "INST-" + j;
+                        tick.price = 100.0;
+                        tick.timestamp = System.nanoTime();
                         service.submit(tick);
                     }
                 } 

@@ -1,30 +1,41 @@
 package com.igprep.showcase.pricer;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PriceCache {
 
-    private long totalUpdatesProcessed = 0;
-    private double lastPrice = 0.0;
+    private AtomicLong totalUpdatesProcessed = new AtomicLong(0);
+    private volatile double lastPrice = 0.0;
 
-    private HashMap<String, PriceTick> cache = new HashMap<>();
+    private AtomicReference<HashMap<String, PriceTick>> cache = new AtomicReference<>(new HashMap<>());
 
-    synchronized void update(PriceTick tick){
-        cache.put(tick.instrumentId(), tick);
-        lastPrice = tick.price();
-        totalUpdatesProcessed++;
+    void update(PriceTick tick){
+        HashMap<String, PriceTick> snapshot;
+        HashMap<String, PriceTick> updated;
+
+        do{
+            snapshot = cache.get();
+            updated = new HashMap<>(snapshot);
+            updated.put(tick.instrumentId, tick);
+        } while(!cache.compareAndSet(snapshot, updated));
+
+        
+        lastPrice = tick.price;
+        totalUpdatesProcessed.incrementAndGet();
     }
 
-    synchronized PriceTick getLatest(String instrumentId){
-        return cache.get(instrumentId);
+    PriceTick getLatest(String instrumentId){
+        return cache.get().get(instrumentId);
     }
 
-    synchronized long getTotalUpdatesProcessed()
+    long getTotalUpdatesProcessed()
     {
-        return totalUpdatesProcessed;
+        return totalUpdatesProcessed.get();
     }
 
-    synchronized double getLastPrice()
+    double getLastPrice()
     {
         return lastPrice;
     }

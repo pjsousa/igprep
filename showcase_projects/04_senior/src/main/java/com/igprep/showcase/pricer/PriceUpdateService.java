@@ -5,10 +5,29 @@ import java.util.concurrent.Executors;
 
 public class PriceUpdateService {
 
-    ExecutorService pool = Executors.newFixedThreadPool(4);
+    // ExecutorService pool = Executors.newFixedThreadPool(4);
 
     private final PriceCache cache = new PriceCache();
     private final SubscriptionRegistry registry = new SubscriptionRegistry();
+    private final PriceTickPool tickPool = new PriceTickPool(524288);
+    private final PriceRingBuffer ringBuffer = new PriceRingBuffer(524288);
+    private volatile boolean running = true;
+
+    public PriceUpdateService() {
+        startDispatcher();
+    }
+
+    void startDispatcher()
+    {
+        Thread dispatcher = new Thread(() -> {
+            while (running) {
+                PriceTick tick = ringBuffer.poll();
+                _submit(tick);
+            }
+        });
+        dispatcher.setDaemon(true);
+        dispatcher.start();
+    }
 
     public void subscribe(String instrumentId, PriceListener listener)
     {
@@ -17,14 +36,17 @@ public class PriceUpdateService {
 
     public void submit(PriceTick tick)
     {
-        pool.execute(() -> {
-            _submit(tick);
-        });
+        ringBuffer.tryPublish(tick);
+    }
+
+    public PriceTick acquirePriceTick()
+    {
+        return tickPool.acquire();
     }
 
     private void _submit(PriceTick tick){
         cache.update(tick);
-        for (PriceListener listener : registry.getListeners(tick.instrumentId())) {
+        for (PriceListener listener : registry.getListeners(tick.instrumentId)) {
             listener.onPrice(tick);
         }
     }
@@ -41,13 +63,6 @@ public class PriceUpdateService {
 
     public void shutdown()
     {
-        pool.shutdown();
-
-        try
-        {
-            pool.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS);
-        }
-        catch(InterruptedException e) {}
-        
+        running = false;
     }
 }

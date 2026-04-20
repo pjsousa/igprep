@@ -31,7 +31,7 @@ public class PriceLoadTest {
        
         // reset before timed run
         deliveredCount[0] = 0;          
-        long now_plus_30s = System.nanoTime() + SUBMIT_NANO_SECONDS;
+        long nowPlus30s = System.nanoTime() + SUBMIT_NANO_SECONDS;
 
         CountDownLatch startLatch = new CountDownLatch(1);
         long[] submittedCount = new long[4];
@@ -50,9 +50,13 @@ public class PriceLoadTest {
                     long count = 0;
                     int instrumentIndex = 0;
 
-                    while(System.nanoTime() < now_plus_30s)
+                    while(System.nanoTime() < nowPlus30s)
                     {
-                        PriceTick tick = new PriceTick("INST-" + instrumentIndex, 100.0, System.nanoTime());
+                        PriceTick tick = service.acquirePriceTick();
+                        tick.instrumentId = "INST-" + instrumentIndex;
+                        tick.price = 100.0;
+                        tick.timestamp = System.nanoTime();
+
                         service.submit(tick);
                         instrumentIndex = (instrumentIndex + 1) % N_INSTRUMENTS;
                         count++;
