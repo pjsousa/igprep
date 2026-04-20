@@ -251,3 +251,52 @@ You have completed this exercise when:
 - [ ] You can describe the exact bytecode sequence that makes `totalUpdatesProcessed++` non-atomic.
 - [ ] You can answer all six Bottleneck Questions verbally, with specific numbers from your runs.
 - [ ] You have written down a precise description of what synchronisation you would add to restore correctness — that is the starting point for Exercise 03.
+
+---
+
+## Observation summary
+
+Here's a draft based on your data:
+
+---
+
+**Exercise 02 — Observation Summary**
+
+**1. Corruption stress test (5 runs, 1M updates, 4 threads, barrier-synchronised)**
+
+| Run | Expected | Actual | Lost | Loss % |
+|-----|----------|--------|------|--------|
+| 1 | 1,000,000 | 884,826 | 115,174 | 11.5% |
+| 2 | 1,000,000 | 816,926 | 183,074 | 18.3% |
+| 3 | 1,000,000 | 832,104 | 167,896 | 16.8% |
+| 4 | 1,000,000 | 921,344 | 78,656 | 7.9% |
+| 5 | 1,000,000 | 831,328 | 168,672 | 16.9% |
+
+Lost-update range: **79K–183K** per 1M updates.
+
+**2. ConcurrentModificationException**
+
+Not observed in the stress test — no iteration occurred during concurrent modification, so the fail-fast detector did not fire. However, `ClassCastException: HashMap$Node cannot be cast to HashMap$TreeNode` was observed during PriceLoadTest runs, indicating structural bucket corruption. This is more dangerous than CME — the data is silently corrupt with no exception.
+
+**3. Stale-read visibility (Step 4)**
+
+| Mode | Stale reads | Time | Rate |
+|------|-------------|------|------|
+| -server (C2) | 7,976–8,623 | ~300ms | ~27K/sec |
+| -Xint (interpreter) | 9,263–10,069 | ~2,100ms | ~4.5K/sec |
+
+The absolute stale-read count is similar between modes, but Xint runs 6–7x slower. Per-unit-time, C2 JIT produces far more stale reads. Lost updates were 50x worse under C2 (295K–430K vs 1K–8K).
+
+**4. Load test (4 producers, 30 seconds)**
+
+| Run | Submitted | Updates lost | Deliveries lost | Throughput |
+|-----|-----------|--------------|-----------------|------------|
+| 1 | 174,562,336 | 92,061 (<0.1%) | 60,630 | 5.8M/s |
+| 2 | 72,002,012 | 14,047,961 (19%) | 14,036,530 | 2.4M/s |
+
+Both counters diverge from submitted. Throughput collapses with contention.
+
+**Hypothesis**
+
+The most dangerous failure mode is HashMap structural corruption. Lost updates can be detected with monitoring. CME only fires during iteration, silently losing data in the common case. A price-distribution system that drops updates silently — with no exception, no alarm — is worse than one that loses counts.
+
