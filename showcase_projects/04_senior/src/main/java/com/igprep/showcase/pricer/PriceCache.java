@@ -1,12 +1,16 @@
 package com.igprep.showcase.pricer;
 
+import jdk.internal.vm.annotation.Contended;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PriceCache {
 
+    @Contended
     private AtomicLong totalUpdatesProcessed = new AtomicLong(0);
+    
+    @Contended
     private volatile double lastPrice = 0.0;
 
     private AtomicReference<HashMap<String, PriceTick>> cache = new AtomicReference<>(new HashMap<>());

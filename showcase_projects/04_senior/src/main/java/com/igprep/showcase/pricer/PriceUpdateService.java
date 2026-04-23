@@ -36,6 +36,7 @@ public class PriceUpdateService {
 
     public void submit(PriceTick tick)
     {
+        tick.startNanos = System.nanoTime();
         ringBuffer.tryPublish(tick);
     }
 

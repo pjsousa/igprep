@@ -1,11 +1,13 @@
 package com.igprep.showcase.pricer;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PriceLoadTest {
     private static int N_INSTRUMENTS = 10_000;
     private static long WARMUP_NANO_SECONDS = 5_000_000_000L;
     private static long SUBMIT_NANO_SECONDS = 30_000_000_000L;
+
 
     /*
         // 1. Create PriceUpdateService
@@ -16,7 +18,8 @@ public class PriceLoadTest {
      */
     public static void main(String[] args)
     {
-        long[] deliveredCount = {0};
+        AtomicLong submittedCount = new AtomicLong();
+        AtomicLong deliveredCount = new AtomicLong();
 
         // 1. Create PriceUpdateService
         PriceUpdateService service = new PriceUpdateService();
@@ -25,16 +28,16 @@ public class PriceLoadTest {
         for (int i = 0; i < N_INSTRUMENTS; i++)
         {
             String instrument = "INST-" + i;
-            PriceListener listener = tick -> deliveredCount[0]++;
+            PriceListener listener = tick -> deliveredCount.incrementAndGet();
             service.subscribe(instrument, listener);
         }
        
         // reset before timed run
-        deliveredCount[0] = 0;          
+        submittedCount.set(0);
+        deliveredCount.set(0);          
         long nowPlus30s = System.nanoTime() + SUBMIT_NANO_SECONDS;
 
         CountDownLatch startLatch = new CountDownLatch(1);
-        long[] submittedCount = new long[4];
         Thread[] producers = new Thread[4];
         
         for (int i = 0; i < 4; i++)
@@ -61,7 +64,7 @@ public class PriceLoadTest {
                         instrumentIndex = (instrumentIndex + 1) % N_INSTRUMENTS;
                         count++;
                     }
-                    submittedCount[threadId] = count;
+                    submittedCount.addAndGet(count);
                 }
                 catch(InterruptedException e) {}
             });
@@ -83,16 +86,15 @@ public class PriceLoadTest {
             catch(InterruptedException e) {}
         }
 
-        long submitted = submittedCount[0] + submittedCount[1] + submittedCount[2] + submittedCount[3];
 
         System.out.println("\n---");
 
-        System.out.printf("Total submitted:     %,d%n", submitted);
-        System.out.printf("Total delivered:     %,d%n", deliveredCount[0]);
-        System.out.printf("Throughput:          %,.0f updates/sec%n", submitted / 30.0);
+        System.out.printf("Total submitted:     %,d%n", submittedCount.get());
+        System.out.printf("Total delivered:     %,d%n", deliveredCount.get());
+        System.out.printf("Throughput:          %,.0f updates/sec%n", submittedCount.get() / 30.0);
         System.out.printf("Total updates:       %,d%n", service.getTotalUpdatesProcessed());
-        System.out.printf("Updates lost:        %,d%n", submitted - service.getTotalUpdatesProcessed());
-        System.out.printf("Deliveries lost:     %,d%n", submitted - deliveredCount[0]);
+        System.out.printf("Updates lost:        %,d%n", submittedCount.get() - service.getTotalUpdatesProcessed());
+        System.out.printf("Deliveries lost:     %,d%n", submittedCount.get() - deliveredCount.get());
 
 
         service.shutdown();

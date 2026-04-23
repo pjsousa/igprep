@@ -1,12 +1,17 @@
 package com.igprep.showcase.pricer;
 
+import jdk.internal.vm.annotation.Contended;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class PriceRingBuffer {
     AtomicReferenceArray<PriceTick> buffer = new AtomicReferenceArray<>(524288);
-    AtomicLong producerSequence = new AtomicLong(0);
-    volatile long consumerSequence = 0;
+
+    @Contended
+    private AtomicLong producerSequence = new AtomicLong(0);
+    
+    @Contended
+    private volatile long consumerSequence = 0;
 
     public PriceRingBuffer(int size) {
         buffer = new AtomicReferenceArray<>(size);

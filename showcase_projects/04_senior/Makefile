@@ -1,16 +1,15 @@
 .SILENT:
 
-run-priceload: 
-	javac -d out src/main/java/com/igprep/showcase/pricer/*.java
-	java -cp out com.igprep.showcase.pricer.PriceLoadTest
+compile:
+	javac -d out --add-exports java.base/jdk.internal.vm.annotation=ALL-UNNAMED src/main/java/com/igprep/showcase/pricer/*.java
 
-run-corruptionstress: 
-	javac -d out src/main/java/com/igprep/showcase/pricer/*.java
+run-priceload: compile
+	java --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED -XX:-RestrictContended -cp out com.igprep.showcase.pricer.PriceLoadTest
+
+run-corruptionstress: compile
 	java -cp out com.igprep.showcase.pricer.CorruptionStressTest
 
-
-
-run-gclog:
+run-gclog: compile
 	java -Xlog:gc*:file=gc-single.log:time,uptime,level,tags -cp out com.igprep.showcase.pricer.PriceLoadTest
 
 jstack-dump:
